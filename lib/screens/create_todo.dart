@@ -3,6 +3,7 @@ import 'package:todo_list/controllers/validators.dart';
 import 'package:todo_list/helper/database_helper.dart';
 import 'package:todo_list/models/task.dart';
 import 'package:todo_list/shared/components/input_text.dart';
+import 'package:todo_list/shared/theme/app_colors.dart';
 import 'package:todo_list/shared/theme/text_styles.dart';
 
 import '../shared/components/input_text_multline.dart';
@@ -24,7 +25,10 @@ class _CreateTodoState extends State<CreateTodo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: AppColors.background,
         title: Text("New task", style: TextStyles.barText),
         centerTitle: true,
       ),
@@ -62,12 +66,13 @@ class _CreateTodoState extends State<CreateTodo> {
           } else {
             print("Titulo: ${_title} | Descrição: ${_description}");
             await DatabaseHelper.instance.addTask(
-              Task(title: _title, description: _description)
+              Task(title: _title, description: _description, isComplete: 0)
             );
             Navigator.pop(context);
           }
         },
-        child: Icon(Icons.save),
+        backgroundColor: AppColors.primary,
+        child: Icon(Icons.save, color: AppColors.background,),
       ),
     );
   }

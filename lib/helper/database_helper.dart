@@ -14,11 +14,11 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationSupportDirectory();
-    String path = join(documentsDirectory.path, 'tasks.db');
+    String path = join(documentsDirectory.path, 'tasks2.db');
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
     );
   }
@@ -29,7 +29,8 @@ class DatabaseHelper {
         CREATE TABLE tasks (
           id INTEGER PRIMARY KEY,
           title TEXT,
-          description TEXT
+          description TEXT,
+          isComplete INTEGER
         )
       '''
     );
@@ -47,5 +48,21 @@ class DatabaseHelper {
   Future<int> addTask(Task tasks) async {
     Database db = await instance.database;
     return await db.insert('tasks', tasks.toMap());
+  }
+
+  Future completeTask(Task tasks) async {
+    Database db = await instance.database;
+    print(tasks);
+
+    if (tasks.isComplete == null || tasks.isComplete == 0) {
+      return db.rawUpdate("UPDATE tasks SET isComplete = ? WHERE id = ?", [1, '${tasks.id}']);
+    } else {
+      return db.rawUpdate("UPDATE tasks SET isComplete = ? WHERE id = ?", [0, '${tasks.id}']);
+    }
+  }
+
+  Future deleteTask(Task task) async {
+    Database db = await instance.database;
+    return db.rawDelete("DELETE FROM tasks WHERE id = ?", ['${task.id}']);
   }
 }
