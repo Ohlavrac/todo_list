@@ -5,8 +5,9 @@ class InputTextMultline extends StatelessWidget {
   final String label;
   final void Function(String value) onChanged;
   final void Function(String value)? onSubmit;
+  final String? Function(String?)? validator;
   
-  const InputTextMultline({ Key? key, required this.label, required this.onChanged, this.onSubmit }) : super(key: key);
+  const InputTextMultline({ Key? key, required this.label, required this.onChanged, this.onSubmit, this.validator }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +15,7 @@ class InputTextMultline extends StatelessWidget {
       width: 380,
       height: 100,
       child: TextFormField(
+        validator: validator,
         onChanged: onChanged,
         onFieldSubmitted: onSubmit,
         keyboardType: TextInputType.multiline,

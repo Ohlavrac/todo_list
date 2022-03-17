@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list/helper/database_helper.dart';
+import 'package:todo_list/models/task.dart';
 import 'package:todo_list/shared/theme/text_styles.dart';
 
 class TodoList extends StatefulWidget {
@@ -25,8 +27,25 @@ class _TodoListState extends State<TodoList> {
               child: Text("My Tasks", style: TextStyles.subtitle,),
             ),
             Expanded(
-              child: ListView(
-                
+              child: Center(
+                child: FutureBuilder<List<Task>>(
+                  future: DatabaseHelper.instance.getTasks(),
+                  builder: (BuildContext context, AsyncSnapshot<List<Task>> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(child: Text("Loading..."),);
+                    }
+                    return ListView(
+                      children: snapshot.data!.map((tasks) {
+                        return Center(
+                          child: ListTile(
+                            title: Text(tasks.title),
+                            subtitle: Text(tasks.description),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
               ),
             )
           ],
